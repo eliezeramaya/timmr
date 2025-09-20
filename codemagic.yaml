@@ -1,29 +1,74 @@
 workflows:
-  timmr_build:
-    name: Timmr Build (Web & Android)
+  timmr_dev:
+    name: Timmr CI (Dev: Web + Android)
+    max_build_duration: 30
     environment:
       flutter: stable
       vars:
         SUPABASE_URL: $SUPABASE_URL
         SUPABASE_ANON_KEY: $SUPABASE_ANON_KEY
-        AMPLITUDE_DEV_KEY: $AMPLITUDE_DEV_KEY
-        AMPLITUDE_PROD_KEY: $AMPLITUDE_PROD_KEY
+        AMPLITUDE_KEY: $AMPLITUDE_DEV_KEY
     scripts:
-      - name: Get dependencies
-        script: flutter pub get
-
-      - name: Build Web (Dev)
+      - name: 🔧 Instalar dependencias
         script: |
-          flutter build web --dart-define=SUPABASE_URL=$SUPABASE_URL \
-            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
-            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_DEV_KEY
+          flutter clean
+          flutter pub get
 
-      - name: Build Android (Release/Prod)
+      - name: 🧪 Análisis y tests
+        script: |
+          flutter analyze
+          flutter test || true  # Quita '|| true' cuando agregues tests
+
+      - name: 🌐 Build Web (Dev)
+        script: |
+          flutter build web --release \
+            --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_KEY
+
+      - name: 📱 Build Android (Dev)
+        script: |
+          flutter build apk --debug \
+            --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_KEY
+    artifacts:
+      - build/web/**
+      - build/app/outputs/flutter-apk/app-debug.apk
+
+  timmr_prod:
+    name: Timmr Release (Prod: Web + Android)
+    max_build_duration: 30
+    environment:
+      flutter: stable
+      vars:
+        SUPABASE_URL: $SUPABASE_URL
+        SUPABASE_ANON_KEY: $SUPABASE_ANON_KEY
+        AMPLITUDE_KEY: $AMPLITUDE_PROD_KEY
+    scripts:
+      - name: 🔧 Instalar dependencias
+        script: |
+          flutter clean
+          flutter pub get
+
+      - name: 🧪 Análisis y tests
+        script: |
+          flutter analyze
+          flutter test || true
+
+      - name: 🌐 Build Web (Prod)
+        script: |
+          flutter build web --release \
+            --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_KEY
+
+      - name: 📱 Build Android (Release)
         script: |
           flutter build apk --release \
             --dart-define=SUPABASE_URL=$SUPABASE_URL \
             --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
-            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_PROD_KEY
+            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_KEY
     artifacts:
       - build/web/**
       - build/app/outputs/flutter-apk/app-release.apk
