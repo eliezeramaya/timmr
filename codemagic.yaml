@@ -1,0 +1,29 @@
+workflows:
+  timmr_build:
+    name: Timmr Build (Web & Android)
+    environment:
+      flutter: stable
+      vars:
+        SUPABASE_URL: $SUPABASE_URL
+        SUPABASE_ANON_KEY: $SUPABASE_ANON_KEY
+        AMPLITUDE_DEV_KEY: $AMPLITUDE_DEV_KEY
+        AMPLITUDE_PROD_KEY: $AMPLITUDE_PROD_KEY
+    scripts:
+      - name: Get dependencies
+        script: flutter pub get
+
+      - name: Build Web (Dev)
+        script: |
+          flutter build web --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_DEV_KEY
+
+      - name: Build Android (Release/Prod)
+        script: |
+          flutter build apk --release \
+            --dart-define=SUPABASE_URL=$SUPABASE_URL \
+            --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+            --dart-define=AMPLITUDE_API_KEY=$AMPLITUDE_PROD_KEY
+    artifacts:
+      - build/web/**
+      - build/app/outputs/flutter-apk/app-release.apk
