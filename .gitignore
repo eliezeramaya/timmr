@@ -1,4 +1,6 @@
-# Miscellaneous
+# ---------------------------
+# 🟢 MISCELLANEOUS / SISTEMA
+# ---------------------------
 *.class
 *.log
 *.pyc
@@ -11,35 +13,61 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+Thumbs.db
 
-# IntelliJ related
+# ---------------------------
+# 🟢 IDE / EDITORES
+# ---------------------------
 *.iml
 *.ipr
 *.iws
 .idea/
+.vscode/           # ignora config local de VSCode (descomenta si no quieres versionarla)
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
+# ---------------------------
+# 🟢 FLUTTER / DART / PUB
+# ---------------------------
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
-/coverage/
+build/
+coverage/
+.melos_tool/
 
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
+# ---------------------------
+# 🟢 ANDROID / GRADLE
+# ---------------------------
+android/.gradle/
+android/local.properties
+android/key.properties
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ---------------------------
+# 🟢 IOS / MACOS
+# ---------------------------
+ios/Pods/
+macos/Pods/
+*.xcworkspace/
+DerivedData/
+
+# ---------------------------
+# 🟢 ARCHIVOS GENERADOS
+# ---------------------------
+app.*.symbols
+app.*.map.json
+**/GeneratedPluginRegistrant.*
+lib/generated_plugin_registrant.*
+
+# ---------------------------
+# 🟢 SECRETS / ENV
+# ---------------------------
+*.env
+.env*
+google-services.json
+GoogleService-Info.plist
